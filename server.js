@@ -12,7 +12,10 @@ battles.push({
 });
 
 engine.on('players:update', function(players){
-	battleBroadcast(battles[0], JSON.stringify(players));
+	battleBroadcast(battles[0], JSON.stringify({
+		type: 'players',
+		players: players
+	}));
 });
 
 server.on('connection', function(ws){
@@ -23,8 +26,19 @@ server.on('connection', function(ws){
 		socket: ws,
 		player: {}
 	});
-	var playerRef = battle.engine.addPlayer();
-	battle.clients[battle.clients.length-1].player = playerRef;
+	
+	//apprently clients need a little delay before they receive messages
+	setTimeout(function(){
+		battle.engine.pushTask(battle.engine.addPlayer)
+		.then(function(playerRef){
+			battle.clients[battle.clients.length-1].player = playerRef;
+		
+			ws.send(JSON.stringify({
+				type: 'identity',
+				id: playerRef.id
+			}));
+		});
+	}, 1);
 	
 	clientSetup(battle, ws);
 });
@@ -41,6 +55,15 @@ function clientSetup(battle, ws){
 				return true;
 			}
 		});
+	});
+	
+	ws.on('message', function(data){
+		data = JSON.parse(data);
+		switch (data.type){
+			case 'attack':
+				battle.engine.pushTask(battle.engine.attackPlayer, [data.target]);
+				break;
+		}
 	});
 }
 
