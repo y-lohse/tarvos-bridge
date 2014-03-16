@@ -23,9 +23,9 @@ wss.on('connection', function(ws){
 
 function clientSetup(battle, ws){	
 	ws.on('close', function(){
-		//@TODO: remove from game
 		battle.clients.every(function(client, index){
 			if (client.client === ws){
+				battle.engine.removePlayer(client.player);
 				battle.clients.splice(index, 1);
 				return false;
 			}
