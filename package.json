@@ -1,0 +1,18 @@
+{
+  "name": "tarvos-bridge",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/y-lohse/tarvos-bridge.git"
+  },
+  "author": "",
+  "gitHead": "f2818257b14bb4caf8983c78e57d5653007c3931",
+  "bugs": {
+    "url": "https://github.com/y-lohse/tarvos-bridge/issues"
+  }
+}
