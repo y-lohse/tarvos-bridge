@@ -1,25 +1,53 @@
 var WebSocketServer = require('ws').Server,
 	wss = new WebSocketServer({port: 8080});
+	
+var TarvosBattle = require('tarvos-battle').TarvosBattle;
 
-wss.on('connection', function(ws){
-	console.log('new connection');
-	
-	ws.on('message', function(message){
-		console.log('received %s', message);
-		ws.send(message);
-	});
-	
-	ws.send('welcome');
+var battles = [];
+var engine = new TarvosBattle();
+battles.push({
+	engine: engine,
+	clients: []
 });
 
-wss.broadcast = function(message){
-	console.log('broadcasting '+message);
-	for (var i in this.clients){
-		this.clients[i].send(message.toString());
-	}
-}
+wss.on('connection', function(ws){
+	var battle = battles[0];
+	
+	var playerRef = battle.engine.addPlayer();
+	battle.clients.push({
+		client: ws,
+		player: playerRef
+	});
+	clientSetup(battle, ws);
+});
 
-var i = 0;
-setInterval(function(){
-	wss.broadcast(i++);
-}, 2000);
+function clientSetup(battle, ws){	
+	ws.on('close', function(){
+		//@TODO: remove from game
+		battle.clients.every(function(client, index){
+			if (client.client === ws){
+				battle.clients.splice(index, 1);
+				return false;
+			}
+			else{
+				return true;
+			}
+		});
+	});
+	
+	//send initial data
+	var players = [];
+	battle.clients.forEach(function(client){
+		var p = {
+			id: client.player.id,
+			hp: client.player.hp,
+		}
+		players.push(p);
+	});
+	
+	battle.clients.forEach(function(client){
+		client.client.send(JSON.stringify(players), function(err){
+			if (err) console.log('error');
+		});
+	});
+}
