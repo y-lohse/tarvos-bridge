@@ -14,5 +14,8 @@
   "gitHead": "f2818257b14bb4caf8983c78e57d5653007c3931",
   "bugs": {
     "url": "https://github.com/y-lohse/tarvos-bridge/issues"
+  },
+  "dependencies": {
+    "ws": "~0.4.31"
   }
 }
