@@ -16,6 +16,7 @@
     "url": "https://github.com/y-lohse/tarvos-bridge/issues"
   },
   "dependencies": {
-    "ws": "~0.4.31"
+    "ws": "~0.4.31",
+	"mysql": "~2.1.1"
   }
 }

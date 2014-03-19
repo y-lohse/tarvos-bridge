@@ -26,6 +26,8 @@ server.on('connection', function(ws){
 		socket: ws,
 		player: {}
 	});
+    
+    battle.engine.id = getBattleId(1); // @TODO : Token du joueur
 	
 	//apprently clients need a little delay before they receive messages
 	setTimeout(function(){
@@ -75,4 +77,32 @@ function battleBroadcast(battle, message){
 			if (err) console.log('error');
 		});
 	});
+}
+
+function getBattleId(playerId) {
+    var mysql      = require('mysql');
+    var battleId;
+    connection = getConnection(mysql);
+    connection.connect();
+
+    connection.query('SELECT id FROM battle WHERE player1 = '+playerId, function(err, rows, fields) {
+      if (err) throw err;
+
+      console.log('The solution is: ', rows[0].id);
+    });
+    battleId = rows[0].id;
+    connection.end();
+    
+    return battleId;
+}
+
+
+function getConnection(mysql) {
+    var connection = mysql.createConnection({
+      host     : 'localhost',
+      database : 'symfony',
+      user     : 'root',
+      password : ''
+    });
+    return connection;
 }
