@@ -89,8 +89,8 @@ function getBattleId(playerId) {
       if (err) throw err;
 
       console.log('The solution is: ', rows[0].id);
+		battleId = rows[0].id;
     });
-    battleId = rows[0].id;
     connection.end();
     
     return battleId;
@@ -100,7 +100,7 @@ function getBattleId(playerId) {
 function getConnection(mysql) {
     var connection = mysql.createConnection({
       host     : 'localhost',
-      database : 'symfony',
+      database : 'tarvosapi',
       user     : 'root',
       password : ''
     });
