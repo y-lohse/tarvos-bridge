@@ -1,6 +1,7 @@
 var WebSocketServer = require('ws').Server,
 	server = new WebSocketServer({port: 8080});
 var TarvosBattle = require('tarvos-battle').TarvosBattle;
+var conf = require('./conf.json');
 
 console.log('Server started');
 
@@ -84,11 +85,9 @@ function getBattleId(playerId) {
     var battleId;
     connection = getConnection(mysql);
     connection.connect();
-
     connection.query('SELECT id FROM battle WHERE player1 = '+playerId, function(err, rows, fields) {
       if (err) throw err;
-
-      console.log('The solution is: ', rows[0].id);
+      console.log('The battle ID of the player ID '+playerId+' is ', rows[0].id);
 		battleId = rows[0].id;
     });
     connection.end();
@@ -99,10 +98,10 @@ function getBattleId(playerId) {
 
 function getConnection(mysql) {
     var connection = mysql.createConnection({
-      host     : 'localhost',
-      database : 'tarvosapi',
-      user     : 'root',
-      password : ''
+      host     : conf.mysql.host,
+      database : conf.mysql.database,
+      user     : conf.mysql.user,
+      password : conf.mysql.password
     });
     return connection;
 }
