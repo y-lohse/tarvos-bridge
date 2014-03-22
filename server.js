@@ -61,6 +61,8 @@ function clientSetup(battle, ws){
 	});
 	
 	ws.on('message', function(data){
+		console.log(data);
+		
 		data = JSON.parse(data);
 		switch (data.type){
 			case 'attack':
@@ -85,7 +87,7 @@ function getBattleId(playerId) {
     var battleId;
     connection = getConnection(mysql);
     connection.connect();
-    connection.query('SELECT id FROM battle WHERE player1 = '+playerId, function(err, rows, fields) {
+    connection.query('SELECT id FROM battle WHERE player1 = '+playerId+' OR player2 = '+playerId, function(err, rows, fields) {
       if (err) throw err;
       console.log('The battle ID of the player ID '+playerId+' is ', rows[0].id);
 		battleId = rows[0].id;
