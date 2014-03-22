@@ -1,7 +1,7 @@
 {
     "mysql" : {
         "host"     : "localhost",
-        "database" : "tarvosapi",
+        "database" : "symfony",
         "user"     : "root",
         "password" : ""
     }
