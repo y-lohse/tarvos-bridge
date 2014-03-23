@@ -1,6 +1,6 @@
 (function(){
 
-var TarvosBattle = require('tarvos-battle').TarvosBattle,
+var TarvosEngine = require('tarvos-battle'),
 	Database = require('./Database.js'),
 	Q = require('q');
 
@@ -37,7 +37,7 @@ function getBattleByToken(token){
 		.then(function(battleId){
 			Database.close();
 			
-			var engine = new TarvosBattle(battleId);
+			var engine = new TarvosEngine(battleId);
 			tokenBattle = {
 				engine: engine,
 				clients: [],
