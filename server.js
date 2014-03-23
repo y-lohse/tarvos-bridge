@@ -6,40 +6,16 @@ var BattleIndex = require('./BattleIndex.js');
 
 console.log('Server started');
 
-function clientRegisterListener(data){
-	var data = JSON.parse(data);
-	
-	if (data.type == 'register'){
-		var token = data.token;
-		
-		var promise = BattleIndex.getBattleByToken(token);
-		promise.then(
-		(function(battle){
-			var client = {
-				socket: this,
-				token: token,
-				player: null
-			};
-			battle.clients.push(client);
-			
-			if (!battle.setup) battleSetup(battle);
-			
-			clientSetup(battle, client);
-			this.removeListener('message', clientRegisterListener);
-		}).bind(this),
-		function(){
-			console.log('Token '+token+' has no battle associated to it');
-			//@TODO: drop la connexion ou queuqlue chose?
+function battleBroadcast(battle, message){
+	battle.clients.forEach(function(client){
+		client.socket.send(message, function(err){
+			if (err) console.log('error while battle-broadcasting');
 		});
-	}
+	});
 }
 
-server.on('connection', function(ws){
-	console.log('New connection');
-	ws.on('message', clientRegisterListener);
-});
-
 function battleSetup(battle){
+	//start liste,ers for battle events
 	battle.engine.on('players:update', function(players){
 		battleBroadcast(battle, JSON.stringify({
 			type: 'players',
@@ -85,12 +61,39 @@ function clientSetup(battle, client){
 	});
 }
 
-function battleBroadcast(battle, message){
-	battle.clients.forEach(function(client){
-		client.socket.send(message, function(err){
-			if (err) console.log('error while battle-broadcasting');
+//waits for a client to send a register message
+function clientRegisterListener(data){
+	var data = JSON.parse(data);
+	
+	if (data.type == 'register'){
+		var token = data.token;
+		
+		var promise = BattleIndex.getBattleByToken(token);
+		promise.then(
+		(function(battle){
+			//create client tracking object
+			var client = {
+				socket: this,
+				token: token,
+				player: null
+			};
+			battle.clients.push(client);
+			
+			if (!battle.setup) battleSetup(battle);
+			
+			clientSetup(battle, client);
+			this.removeListener('message', clientRegisterListener);//client is registered, we don't need this anymore
+		}).bind(this),
+		function(){
+			console.log('Token %s has no battle associated to it', token);
+			//@TODO: drop la connexion ou queuqlue chose?
 		});
-	});
+	}
 }
+
+server.on('connection', function(ws){
+	console.log('New connection');
+	ws.on('message', clientRegisterListener);
+});
 
 })();
