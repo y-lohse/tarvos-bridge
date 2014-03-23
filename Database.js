@@ -21,7 +21,7 @@ function close(){
 function getBattleIdByToken(token){
 	var def = Q.defer();
 	
-	connection.query('SELECT id FROM battle WHERE player1 = '+connection.escape(token)+' OR player2 = '+connection.escape(token), function(err, rows, fields){
+	connection.query('SELECT id FROM Battle WHERE player1 = '+connection.escape(token)+' OR player2 = '+connection.escape(token), function(err, rows, fields){
 		if (err) throw err;
 		
 		if (rows){
