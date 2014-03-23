@@ -37,9 +37,8 @@ function getBattleByToken(token){
 		.then(function(battleId){
 			Database.close();
 			
-			var engine = new TarvosBattle();
+			var engine = new TarvosBattle(battleId);
 			tokenBattle = {
-				id: battleId,
 				engine: engine,
 				clients: [],
 				setup: false
