@@ -86,7 +86,7 @@ function clientRegisterListener(data){
 		}).bind(this),
 		function(){
 			console.log('Token %s has no battle associated to it', token);
-			//@TODO: drop la connexion ou queuqlue chose?
+			//@TODO: drop la connexion ou quelque chose?
 		});
 	}
 }

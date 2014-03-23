@@ -1,5 +1,7 @@
 (function(){
 
+//Manages a list of all active battles
+//only does the instanciating and retrieving part, every thing else should be done by another module
 var TarvosEngine = require('tarvos-battle'),
 	Database = require('./Database.js'),
 	Q = require('q');
