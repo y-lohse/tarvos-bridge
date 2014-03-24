@@ -8,7 +8,7 @@ var TarvosEngine = require('tarvos-battle'),
 
 var battles = [];
 
-//returns the battle for atoken (creates it if necessary). Returns null if the token is nowhere to be found
+//returns the battle for a token (creates it if necessary). Returns null if the token is nowhere to be found
 function getBattleByToken(token){
 	var def = Q.defer();
 	

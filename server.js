@@ -2,10 +2,14 @@
 
 var WebSocketServer = require('ws').Server,
 	server = new WebSocketServer({port: 8080});
-var BattleIndex = require('./BattleIndex.js');
+var BattleIndex = require('./BattleIndex.js'),
+    BattleEnd = require('./BattleEnd.js');
 
 console.log('Server started');
 
+    /**
+     * Permet d'envoyer un message aux joueurs de la bataille
+     */
 function battleBroadcast(battle, message){
 	battle.clients.forEach(function(client){
 		client.socket.send(message, function(err){
@@ -22,6 +26,13 @@ function battleSetup(battle){
 			players: players
 		}));
 	});
+
+    battle.engine.on('battle:end', function(){
+        var promise = BattleEnd.setEndBattle(battle);
+        battleBroadcast(battle, JSON.stringify({
+            message: 'The battle is over',
+        }));
+    });
 	
 	battle.setup = true;
 }

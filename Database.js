@@ -37,6 +37,35 @@ function getBattleIdByToken(token){
 	return def.promise;
 }
 
+function setEndBattle(battleId) {
+    var def = Q.defer();
+    var end = new Date();
+    var winner = 1;
+    connection.query('SELECT player1, player2, start FROM Battle WHERE '+connection.escape(battleId), function(err, rows, fields){
+        if (err) throw err;
+        if (rows){
+            console.log('Get battle '+battleId+' : OK');
+        }
+        else{
+            console.log('No battle found for id '+token);
+            def.reject();
+        }
+    });
+
+    connection.query('INSERT INTO History (player1,player2,start,end,winner) VALUES ("'+rows[0].player1+'","'+rows[0].player2+'","'+rows[0].start+'","'+rows[0].end+'","'+rows[0].winner+'")', function(err, rows, fields){
+        if (err) throw err;
+        if (rows){
+            console.log('Set history : OK');
+        }
+        else{
+            console.log('No battle found for id '+token);
+            def.reject();
+        }
+    });
+
+    //@TODO Supprimer la bataille
+
+}
 exports.open = open;
 exports.close = close;
 exports.getBattleIdByToken = getBattleIdByToken;
