@@ -69,5 +69,6 @@ function setEndBattle(battleId) {
 exports.open = open;
 exports.close = close;
 exports.getBattleIdByToken = getBattleIdByToken;
+exports.setEndBattle = setEndBattle;
 
 })();

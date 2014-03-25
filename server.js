@@ -10,9 +10,9 @@ console.log('Server started');
     /**
      * Permet d'envoyer un message aux joueurs de la bataille
      */
-function battleBroadcast(battle, message){
+function battleBroadcast(battle, data){
 	battle.clients.forEach(function(client){
-		client.socket.send(message, function(err){
+		client.socket.send(JSON.stringify(data), function(err){
 			if (err) console.log('error while battle-broadcasting');
 		});
 	});
@@ -21,17 +21,17 @@ function battleBroadcast(battle, message){
 function battleSetup(battle){
 	//start liste,ers for battle events
 	battle.engine.on('players:update', function(players){
-		battleBroadcast(battle, JSON.stringify({
+		battleBroadcast(battle, {
 			type: 'players',
 			players: players
-		}));
+		});
 	});
 
     battle.engine.on('battle:end', function(){
         var promise = BattleEnd.setEndBattle(battle);
-        battleBroadcast(battle, JSON.stringify({
-            message: 'The battle is over',
-        }));
+        battleBroadcast(battle, {
+            type: 'battle-end',
+        });
     });
 	
 	battle.setup = true;

@@ -17,6 +17,7 @@ function setEndBattle(battle) {
     return def.promise;
 }
 
+exports.setEndBattle = setEndBattle;
 
 
 })();
