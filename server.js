@@ -2,8 +2,7 @@
 
 var WebSocketServer = require('ws').Server,
 	server = new WebSocketServer({port: 8080});
-var BattleIndex = require('./BattleIndex.js'),
-    BattleEnd = require('./BattleEnd.js');
+var BattleIndex = require('./BattleIndex.js');
 
 console.log('Server started');
 
@@ -28,9 +27,10 @@ function battleSetup(battle){
 	});
 
     battle.engine.on('battle:end', function(){
-        var promise = BattleEnd.setEndBattle(battle);
-        battleBroadcast(battle, {
-            type: 'battle-end',
+        BattleIndex.endBattle(battle).then(function(){
+			battleBroadcast(battle, {
+				type: 'battle-end',
+			});
         });
     });
 	

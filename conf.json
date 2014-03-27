@@ -1,8 +1,10 @@
 {
-    "mysql" : {
-        "host"     : "localhost",
-        "database" : "symfony",
-        "user"     : "root",
-        "password" : ""
+    "production" : {
+        "path"    : "C:/wamp/www/tarvos-api",
+        "command" : "php app/console"
+    },
+    "yannick" : {
+        "path"    : "C:/wamp/www/tarvos-api",
+        "command" : "php app/console"
     }
 }

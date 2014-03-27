@@ -3,7 +3,7 @@
 //Manages a list of all active battles
 //only does the instanciating and retrieving part, every thing else should be done by another module
 var TarvosEngine = require('tarvos-battle'),
-	Database = require('./Database.js'),
+	API = require('./API.js'),
 	Q = require('q');
 
 var battles = [];
@@ -33,12 +33,8 @@ function getBattleByToken(token){
 	}
 	else{
 		//unknown token, check in database
-		Database.open();
-		
-		Database.getBattleIdByToken(token)
+		API.getBattleIdByToken(token)
 		.then(function(battleId){
-			Database.close();
-			
 			var engine = new TarvosEngine(battleId);
 			tokenBattle = {
 				engine: engine,
@@ -49,8 +45,7 @@ function getBattleByToken(token){
 			battles.push(tokenBattle);
 			def.resolve(tokenBattle);
 		},
-		function(){
-			Database.close();
+		function(error){
 			def.reject();
 		});
 	}
@@ -58,6 +53,11 @@ function getBattleByToken(token){
 	return def.promise;
 }
 
+function endBattle(battle){
+	return API.endBattle(battle.engine.id);
+}
+
 exports.getBattleByToken = getBattleByToken;
+exports.endBattle = endBattle;
 
 })();
