@@ -13,28 +13,22 @@ function getBattleByToken(token){
 	var def = Q.defer();
 	
 	var tokenBattle = null;
-	var found = false;//used to early out
 	
-	battles.every(function(battle){
-		battle.clients.every(function(client){
-			if (client.token === token){
-				found = true;
-				tokenBattle = battle;
+	API.getBattleId(token)
+	.then(function(battleId){
+		//first check to see if the battle is already created
+		battles.every(function(battle){
+			if (battle.engine.id == battleId){
+				def.resolve(battle);
+				return false;
 			}
-			
-			return !found;
+			else{
+				return true;
+			}
 		});
 		
-		return !found;
-	});
-	
-	if (found){
-		def.resolve(tokenBattle);
-	}
-	else{
-		//unknown token, check in database
-		API.getBattleId(token)
-		.then(function(battleId){
+		//if it wasnt existing; create it
+		if (!def.promise.isFulfilled()){
 			var engine = new TarvosEngine(battleId);
 			tokenBattle = {
 				engine: engine,
@@ -44,17 +38,21 @@ function getBattleByToken(token){
 			
 			battles.push(tokenBattle);
 			def.resolve(tokenBattle);
-		},
-		function(error){
-			def.reject();
-		});
-	}
+		}
+	},
+	function(){
+		def.reject();
+	});
 	
 	return def.promise;
 }
 
 function endBattle(battle){
-	return API.endBattle(battle.engine.id);
+	//determine the victor
+	var winner = (battle.clients[0].player.hp > 0) ? battle.clients[0].token : battle.clients[1].token;
+	
+	//@TODO: pass a clean client object, not the whole array
+	return API.endBattle(battle.engine.id, battle.clients, winner);
 }
 
 exports.getBattleByToken = getBattleByToken;

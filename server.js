@@ -84,8 +84,8 @@ function clientRegisterListener(data){
 	if (data.type == 'register'){
 		var token = data.token;
 		
-		var promise = BattleIndex.getBattleByToken(token);
-		promise.then(
+		BattleIndex.getBattleByToken(token)
+		.then(
 		(function(battle){
 			//create client tracking object
 			var client = {

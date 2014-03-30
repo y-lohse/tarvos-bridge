@@ -10,7 +10,10 @@ function apiCall(command){
 	exec('php app/console '+command, 
 		{cwd: conf.path}, 
 		function(error, stdout, stderr){
-			if (error) def.reject(error);
+			if (error){
+				console.log(error);
+				def.reject(error);
+			}
 			else{
 				def.resolve(stdout.replace(/(\r)?\n$/, ''));
 			}
@@ -29,10 +32,25 @@ function getBattleId(token){
 	return def.promise;
 }
 
-function endBattle(battleId){
+function endBattle(battleId, clients, winner){
 	var def = Q.defer();
 	
-	apiCall('api:battle:end '+battleId.toString()).then(function(result){
+	var data = {
+		battle: {
+			id: battleId,
+			winner: winner
+		}
+	};
+	
+	clients.forEach(function(client){
+		data.battle[client.token] = {
+			ship: {hp: client.player.hp}
+		};
+	});
+	
+	var args = JSON.stringify(data).replace(/"/g, "\\\"");
+	
+	apiCall('api:battle:end '+args).then(function(result){
 		if (!!result) def.resolve();
 		else def.reject();
 	}, def.reject);
