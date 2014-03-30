@@ -7,7 +7,7 @@ var conf = require('./conf.json').production,
 function apiCall(command){
 	var def = Q.defer();
 	
-	exec(conf.command+' '+command, 
+	exec('php app/console '+command, 
 		{cwd: conf.path}, 
 		function(error, stdout, stderr){
 			if (error) def.reject(error);

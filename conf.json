@@ -1,10 +1,8 @@
 {
     "production" : {
-        "path"    : "C:/wamp/www/tarvos-api",
-        "command" : "php app/console"
+        "path"    : "C:/wamp/www/tarvos-api"
     },
     "yannick" : {
-        "path"    : "C:/wamp/www/tarvos-api",
-        "command" : "php app/console"
+        "path"    : "C:/wamp/www/tarvos-api"
     }
 }
