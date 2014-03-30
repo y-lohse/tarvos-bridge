@@ -61,7 +61,7 @@ function clientSetup(battle, client){
 	});
 	
 	//creates the player inside the battle
-	battle.engine.pushTask(battle.engine.addPlayer)
+	battle.engine.pushTask(battle.engine.addPlayer, [client.token])
 	.then(function(player){
 		battle.clients[battle.clients.length-1].player = player;
 		
