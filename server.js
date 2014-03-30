@@ -2,7 +2,8 @@
 
 var WebSocketServer = require('ws').Server,
 	server = new WebSocketServer({port: 8080});
-var BattleIndex = require('./BattleIndex.js');
+var BattleIndex = require('./BattleIndex.js'),
+	API = require('./API.js');
 
 console.log('Server started');
 
@@ -61,8 +62,12 @@ function clientSetup(battle, client){
 	});
 	
 	//creates the player inside the battle
-	battle.engine.pushTask(battle.engine.addPlayer, [client.token])
+	API.getShip(client.token)
+	.then(function(data){
+		return battle.engine.pushTask(battle.engine.addPlayer, [data.name, data.hp]);
+	})
 	.then(function(player){
+		//assign the reference to the actual player object
 		battle.clients[battle.clients.length-1].player = player;
 		
 		client.socket.send(JSON.stringify({

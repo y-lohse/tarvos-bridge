@@ -40,7 +40,21 @@ function endBattle(battleId){
 	return def.promise;
 }
 
+function getShip(token){
+	var def = Q.defer();
+	
+	apiCall('api:ship:get '+token.toString()).then(function(result){
+		if (result == 0) def.reject();
+		else{
+			def.resolve(JSON.parse(result));
+		}
+	}, def.reject);
+	
+	return def.promise;
+}
+
 exports.getBattleIdByToken = getBattleIdByToken;
 exports.endBattle = endBattle;
+exports.getShip = getShip;
 
 })();
