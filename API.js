@@ -19,7 +19,7 @@ function apiCall(command){
 	return def.promise;
 }
 
-function getBattleIdByToken(token){
+function getBattleId(token){
 	var def = Q.defer();
 	
 	apiCall('api:battle:get '+token.toString()).then(function(id){
@@ -53,7 +53,7 @@ function getShip(token){
 	return def.promise;
 }
 
-exports.getBattleIdByToken = getBattleIdByToken;
+exports.getBattleId = getBattleId;
 exports.endBattle = endBattle;
 exports.getShip = getShip;
 

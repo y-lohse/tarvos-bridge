@@ -33,7 +33,7 @@ function getBattleByToken(token){
 	}
 	else{
 		//unknown token, check in database
-		API.getBattleIdByToken(token)
+		API.getBattleId(token)
 		.then(function(battleId){
 			var engine = new TarvosEngine(battleId);
 			tokenBattle = {
