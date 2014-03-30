@@ -7,9 +7,9 @@ var BattleIndex = require('./BattleIndex.js'),
 
 console.log('Server started');
 
-    /**
-     * Permet d'envoyer un message aux joueurs de la bataille
-     */
+/**
+ * Permet d'envoyer un message aux joueurs de la bataille
+ */
 function battleBroadcast(battle, data){
 	battle.clients.forEach(function(client){
 		client.socket.send(JSON.stringify(data), function(err){
@@ -43,7 +43,7 @@ function clientSetup(battle, client){
 		battle.clients.every(function(battleClient, index){
 			if (client.socket === battleClient.socket){
 				battle.clients.splice(index, 1);
-				battle.engine.pushTask(battle.engine.removePlayer, [battleClient.player]);
+				battle.engine.pushTask(battle.engine.removePlayer, battleClient.player);
 				return false;
 			}
 			else{
@@ -56,7 +56,7 @@ function clientSetup(battle, client){
 		data = JSON.parse(data);
 		switch (data.type){
 			case 'attack':
-				battle.engine.pushTask(battle.engine.attackPlayer, [data.target]);
+				battle.engine.pushTask(battle.engine.attackPlayer, data.target);
 				break;
 		}
 	});
@@ -64,7 +64,7 @@ function clientSetup(battle, client){
 	//creates the player inside the battle
 	API.getShip(client.token)
 	.then(function(data){
-		return battle.engine.pushTask(battle.engine.addPlayer, [data.name, data.hp]);
+		return battle.engine.pushTask(battle.engine.addPlayer, data.name, data.hp, data.armaments);
 	})
 	.then(function(player){
 		//assign the reference to the actual player object
