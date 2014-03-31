@@ -56,7 +56,7 @@ function clientSetup(battle, client){
 		data = JSON.parse(data);
 		switch (data.type){
 			case 'attack':
-				battle.engine.pushTask(battle.engine.attackPlayer, data.target);
+				battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament);
 				break;
 		}
 	});
