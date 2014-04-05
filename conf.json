@@ -1,6 +1,6 @@
 {
     "production" : {
-        "path"    : "C:/wamp/www/tarvos-api"
+        "path"    : "/var/www/symfony"
     },
     "yannick" : {
         "path"    : "C:/wamp/www/tarvos-api"
