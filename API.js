@@ -1,6 +1,6 @@
 (function(){
 
-var useConf = 'prod'
+var useConf = 'production'
 process.argv.forEach(function(value, index){
 	if (index > 1 && value.match(/conf=\w+/)){
 		useConf = value.split('=')[1];
