@@ -100,10 +100,11 @@ function clientRegisterListener(data){
 			clientSetup(battle, client);
 			this.removeListener('message', clientRegisterListener);//client is registered, we don't need this anymore
 		}).bind(this),
-		function(){
+		(function(){
 			console.log('Token %s has no battle associated to it', token);
-			//@TODO: drop la connexion ou quelque chose?
-		});
+			console.log('Dropping client.');
+			this.close();
+		}).bind(this));
 	}
 }
 
