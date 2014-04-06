@@ -1,6 +1,13 @@
 (function(){
 
-var conf = require('./conf.json').production,
+var useConf = 'prod'
+process.argv.forEach(function(value, index){
+	if (index > 1 && value.match(/conf=\w+/)){
+		useConf = value.split('=')[1];
+	}
+});
+
+var conf = require('./conf.json')[useConf],
 	exec = require('child_process').exec,
 	Q = require('q');
 
