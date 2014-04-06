@@ -72,7 +72,7 @@ function clientSetup(battle, client){
 	})
 	.then(function(player){
 		//assign the reference to the actual player object
-		battle.clients[battle.clients.length-1].player = player;
+		client.player = player;
 		console.log('Client setup complete');
 		
 		client.socket.send(JSON.stringify({
