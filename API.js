@@ -10,11 +10,12 @@ function apiCall(command){
 	exec('php app/console '+command, 
 		{cwd: conf.path}, 
 		function(error, stdout, stderr){
-			if (error){
-				console.log(error);
+			if (error || stderr){
+				console.log('Error during api call: %s', (error || stderr));
 				def.reject(error);
 			}
 			else{
+				console.log(command+' returned '+stdout);
 				def.resolve(stdout.replace(/(\r)?\n$/, ''));
 			}
 	});

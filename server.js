@@ -5,7 +5,7 @@ var WebSocketServer = require('ws').Server,
 var BattleIndex = require('./BattleIndex.js'),
 	API = require('./API.js');
 
-console.log('Server started');
+console.log('Socket started');
 
 /**
  * Permet d'envoyer un message aux joueurs de la bataille
@@ -20,6 +20,8 @@ function battleBroadcast(battle, data){
 
 function battleSetup(battle){
 	//start liste,ers for battle events
+	console.log('Performing battle setup');
+	
 	battle.engine.on('players:update', function(players){
 		battleBroadcast(battle, {
 			type: 'players',
@@ -39,6 +41,8 @@ function battleSetup(battle){
 }
 
 function clientSetup(battle, client){
+	console.log('Performing client setup');
+	
 	client.socket.on('close', function(){
 		battle.clients.every(function(battleClient, index){
 			if (client.socket === battleClient.socket){
@@ -69,6 +73,7 @@ function clientSetup(battle, client){
 	.then(function(player){
 		//assign the reference to the actual player object
 		battle.clients[battle.clients.length-1].player = player;
+		console.log('Client setup complete');
 		
 		client.socket.send(JSON.stringify({
 			type: 'identity',
@@ -83,10 +88,14 @@ function clientRegisterListener(data){
 	
 	if (data.type == 'register'){
 		var token = data.token;
+		console.log('Received token %s', token);
 		
 		BattleIndex.getBattleByToken(token)
 		.then(
 		(function(battle){
+			console.log('Battle '+battle.engine.id+' linked to token '+token);
+			console.log('%d players already in that battle', battle.clients.length);
+			
 			//create client tracking object
 			var client = {
 				socket: this,
@@ -105,6 +114,10 @@ function clientRegisterListener(data){
 			console.log('Dropping client.');
 			this.close();
 		}).bind(this));
+	}
+	else{
+		console.log('Client sent data prior to handshake');
+		console.log(data);
 	}
 }
 
