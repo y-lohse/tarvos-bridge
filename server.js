@@ -94,7 +94,8 @@ function clientRegisterListener(data){
 		.then(
 		(function(battle){
 			console.log('Battle '+battle.engine.id+' linked to token '+token);
-			console.log('%d players already in that battle', battle.clients.length);
+			console.log('%d clients already in that battle', battle.clients.length);
+			console.log('%d players already in that battle', battle.engine.players.length);
 			
 			//create client tracking object
 			var client = {
