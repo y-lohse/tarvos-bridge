@@ -7,14 +7,19 @@ var BattleIndex = require('./BattleIndex.js'),
 
 console.log('Socket started');
 
+//sends data to a single client
+function sendJSON(client, data){
+	client.socket.send(JSON.stringify(data), function(err){
+		if (err) console.log('error while sending data to client');
+	});
+}
+
 /**
  * Permet d'envoyer un message aux joueurs de la bataille
  */
 function battleBroadcast(battle, data){
 	battle.clients.forEach(function(client){
-		client.socket.send(JSON.stringify(data), function(err){
-			if (err) console.log('error while battle-broadcasting');
-		});
+		sendJSON(client, data);
 	});
 }
 
@@ -73,6 +78,14 @@ function clientSetup(battle, client){
 	.then(function(player){
 		//assign the reference to the actual player object
 		client.player = player;
+		
+		player.on('armament:broken', function(armamentId){
+			sendJSON({
+				type: 'armament:broken',
+				id: armamentId
+			}, client.socket);
+		});
+		
 		console.log('Client setup complete');
 		
 		client.socket.send(JSON.stringify({
@@ -95,7 +108,6 @@ function clientRegisterListener(data){
 		(function(battle){
 			console.log('Battle '+battle.engine.id+' linked to token '+token);
 			console.log('%d clients already in that battle', battle.clients.length);
-			console.log('%d players already in that battle', battle.engine.players.length);
 			
 			//create client tracking object
 			var client = {
