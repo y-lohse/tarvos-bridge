@@ -33,6 +33,13 @@ function battleSetup(battle){
 			players: players
 		});
 	});
+	
+	battle.engine.on('players:hp', function(hps){
+		battleBroadcast(battle, {
+			type: 'hp',
+			hps: hps
+		});
+	});
 
     battle.engine.on('battle:end', function(){
         BattleIndex.endBattle(battle).then(function(){
@@ -80,10 +87,10 @@ function clientSetup(battle, client){
 		client.player = player;
 		
 		player.on('armament:broken', function(armamentId){
-			sendJSON({
-				type: 'armament:broken',
+			sendJSON(client, {
+				type: 'armament-broken',
 				id: armamentId
-			}, client.socket);
+			});
 		});
 		
 		console.log('Client setup complete');
