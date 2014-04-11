@@ -93,12 +93,20 @@ function clientSetup(battle, client){
 			});
 		});
 		
+		player.on('module:state', function(moduleId, state){
+			sendJSON(client, {
+				type: 'module-state',
+				id: moduleId,
+				state: state
+			});
+		});
+		
 		console.log('Client setup complete');
 		
-		client.socket.send(JSON.stringify({
+		sendJSON(client, {
 			type: 'identity',
 			id: player.id
-		}));
+		});
 	});
 }
 
