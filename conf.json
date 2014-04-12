@@ -4,5 +4,8 @@
     },
     "yannick" : {
         "path"    : "C:/wamp/www/tarvos-api"
+    },
+    "clowrid" : {
+        "path"    : "C:/Users/Clowrid/Documents/GitHub/tarvos-api"
     }
 }
