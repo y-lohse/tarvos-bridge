@@ -92,6 +92,13 @@ function clientSetup(battle, client){
 		//assign the reference to the actual player object
 		client.player = player;
 		
+		player.on('player:energy', function(energy){
+			sendJSON(client, {
+				type: 'energy',
+				energy: energy
+			});
+		});
+		
 		player.on('armament:broken', function(armamentId){
 			sendJSON(client, {
 				type: 'armament-broken',
@@ -99,11 +106,12 @@ function clientSetup(battle, client){
 			});
 		});
 		
-		player.on('module:state', function(moduleId, state){
+		player.on('module:state', function(moduleId, state, energy){
 			sendJSON(client, {
 				type: 'module-state',
 				id: moduleId,
-				state: state
+				state: state,
+				energy: energy
 			});
 		});
 		
