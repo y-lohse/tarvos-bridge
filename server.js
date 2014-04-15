@@ -75,10 +75,10 @@ function clientSetup(battle, client){
 				battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament, data.room);
 				break;
             case 'powerup':
-                battle.engine.pushTask(battle.engine.powerUp, client.player, data.targetId, data.targetType);
+                battle.engine.pushTask(battle.engine.changePower, 'up', client.player, data.targetId, data.targetType);
                 break;
             case 'powerdown':
-                battle.engine.pushTask(battle.engine.powerDown, client.player, data.targetId, data.targetType);
+                battle.engine.pushTask(battle.engine.changePower, 'down', client.player, data.targetId, data.targetType);
                 break;
 		}
 	});
