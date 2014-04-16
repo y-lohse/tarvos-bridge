@@ -52,7 +52,7 @@ function endBattle(battleId, clients, winner){
 	
 	clients.forEach(function(client){
 		data.battle[client.token] = {
-			ship: {hp: client.player.hp}
+			ship: {hp: client.player.hp.current}
 		};
 	});
 	
