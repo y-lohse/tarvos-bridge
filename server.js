@@ -99,10 +99,12 @@ function clientSetup(battle, client){
 			});
 		});
 		
-		player.on('armament:broken', function(armamentId){
+		player.on('armament:state', function(armamentId, state, energy){
 			sendJSON(client, {
-				type: 'armament-broken',
-				id: armamentId
+				type: 'armament-state',
+				id: armamentId,
+				state: state,
+				energy: energy
 			});
 		});
 		
