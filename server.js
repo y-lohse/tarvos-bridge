@@ -99,22 +99,14 @@ function clientSetup(battle, client){
 			});
 		});
 		
-		player.on('armament:state', function(armamentId, state, energy){
-			sendJSON(client, {
-				type: 'armament-state',
-				id: armamentId,
-				state: state,
-				energy: energy
-			});
+		player.on('armament:state', function(data){
+			data.type = 'armament-state';
+			sendJSON(client, data);
 		});
 		
-		player.on('module:state', function(moduleId, state, energy){
-			sendJSON(client, {
-				type: 'module-state',
-				id: moduleId,
-				state: state,
-				energy: energy
-			});
+		player.on('module:state', function(data){
+			data.type = 'module-state';
+			sendJSON(client, data);
 		});
 		
 		console.log('Client setup complete');
