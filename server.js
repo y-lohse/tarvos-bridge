@@ -52,9 +52,21 @@ function battleSetup(battle){
 	battle.setup = true;
 }
 
+function clientTimeout(client) {
+    // Couper le WS
+    console.log("Le client vient de timeout");
+}
+
+function ping(client) {
+    client.socket.ping();
+    console.log('ping envoyé');
+    client.timeout = setTimeout(function(){clientTimeout(client)},8000);
+}
+
 function clientSetup(battle, client){
 	console.log('Performing client setup');
-	
+    client.idle = setTimeout(function(){ping(client)},20000);
+
 	client.socket.on('close', function(){
 		battle.clients.every(function(battleClient, index){
 			if (client.socket === battleClient.socket){
@@ -70,6 +82,10 @@ function clientSetup(battle, client){
 	
 	client.socket.on('message', function(data){	
 		data = JSON.parse(data);
+
+        clearTimeout(client.idle);
+        client.idle = setTimeout(function(){ping(client)},10000);
+
 		switch (data.type){
 			case 'attack':
 				battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament, data.room);
@@ -82,6 +98,12 @@ function clientSetup(battle, client){
                 break;
 		}
 	});
+
+    client.socket.on('pong',function(){
+        console.log('pong reçu');
+        clearTimeout(client.timeout);
+        client.idle = setTimeout(function(){ping(client)},10000);
+    });
 	
 	//creates the player inside the battle
 	API.getShip(client.token)
@@ -136,7 +158,9 @@ function clientRegisterListener(data){
 			var client = {
 				socket: this,
 				token: token,
-				player: null
+				player: null,
+                timeout: null,
+                idle:null
 			};
 			battle.clients.push(client);
 			
