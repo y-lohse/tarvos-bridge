@@ -67,7 +67,7 @@ function ping(client) {
 
 function clientSetup(battle, client){
 	console.log('Performing client setup');
-    if(battle.players.length = 2) battleBroadcast(battle,"battle:start");
+    if (battle.clients.length == 2) battleBroadcast(battle, {type: 'battle-start'});
     client.idle = setTimeout(function(){ping(client)},inactivityTime);
 
 	client.socket.on('close', function(){
