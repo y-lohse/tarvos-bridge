@@ -44,6 +44,7 @@ function battleSetup(battle){
 	});
 
     battle.engine.on('battle:end', function(){
+        battle.engine.stop();
         BattleIndex.endBattle(battle).then(function(){
 			battleBroadcast(battle, {
 				type: 'battle-end',
@@ -112,9 +113,8 @@ function clientSetup(battle, client){
 	//creates the player inside the battle
 	API.getShip(client.token)
 	.then(function(data){
-		return battle.engine.pushTask(battle.engine.addPlayer, data.name, data.hp, data.armaments, data.type, data.energy, data.modules);
-	})
-	.then(function(player){
+		var player = battle.engine.addPlayer(data.name, data.hp, data.armaments, data.type, data.energy, data.modules);
+		
 		//assign the reference to the actual player object
 		client.player = player;
 		
@@ -142,7 +142,10 @@ function clientSetup(battle, client){
 			id: player.id
 		});
 		
-		if (battle.clients.length == 2) battleBroadcast(battle, {type: 'battle-start'});
+		if (battle.clients.length == 2){
+			battle.engine.start();
+			battleBroadcast(battle, {type: 'battle-start'});
+		}
 	});
 }
 
