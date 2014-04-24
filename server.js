@@ -162,20 +162,41 @@ function clientRegisterListener(data){
 		(function(battle){
 			console.log('Battle '+battle.engine.id+' linked to token '+token);
 			console.log('%d clients already in that battle', battle.clients.length);
-			
-			//create client tracking object
-			var client = {
-				socket: this,
-				token: token,
-				player: null,
-                timeout: null,
-                idle:null
-			};
-			battle.clients.push(client);
-			
-			if (!battle.setup) battleSetup(battle);
-			
-			clientSetup(battle, client);
+
+            var client = null;
+            battle.clients.every(function(cl){
+                if (cl.token == token){
+                    client = cl;
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            });
+
+            // En cas de reconnexion
+            if (client != null) {
+                client.socket = this;
+                battle.engine.notifyPlayerInformation();
+                sendJSON(client, {
+                    type: 'identity',
+                    id: player.id
+                });
+                battleBroadcast(battle, {type: 'battle-start'});
+            }
+			// En cas de nouvelle connexion :create client tracking object
+            else {
+                var client = {
+                    socket: this,
+                    token: token,
+                    player: null,
+                    timeout: null,
+                    idle:null
+                };
+                battle.clients.push(client);
+			    if (!battle.setup) battleSetup(battle);
+			    clientSetup(battle, client);
+            }
 			this.removeListener('message', clientRegisterListener);//client is registered, we don't need this anymore
 		}).bind(this),
 		(function(){
