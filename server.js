@@ -11,9 +11,11 @@ console.log('Socket started');
 
 //sends data to a single client
 function sendJSON(client, data){
-	client.socket.send(JSON.stringify(data), function(err){
-		if (err) console.log('error while sending data to client');
-	});
+    if(client.socket != null) {
+        client.socket.send(JSON.stringify(data), function(err){
+            if (err) console.log('error while sending data to client');
+        });
+    }
 }
 
 /**
