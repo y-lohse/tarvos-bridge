@@ -21,7 +21,9 @@ function sendJSON(client, data){
  */
 function battleBroadcast(battle, data){
 	battle.clients.forEach(function(client){
-		sendJSON(client, data);
+        if(client.socket != null) {
+		    sendJSON(client, data);
+        }
 	});
 }
 
@@ -56,7 +58,7 @@ function battleSetup(battle){
 }
 
 function clientTimeout(client) {
-    // Couper le WS
+    client.socket = null;
     console.log("Le client vient de timeout");
 }
 
