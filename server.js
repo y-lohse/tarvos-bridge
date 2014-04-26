@@ -67,7 +67,6 @@ function clientTimeout(client,battle) {
 
 function ping(client,battle) {
     client.socket.ping();
-    console.log('ping envoyé');
     client.timeout = setTimeout(clientTimeout, inactivity.timeout, client, battle);
 }
 
@@ -81,16 +80,6 @@ function clientSetup(battle, client){
         client.socket = null;
         battleBroadcast(battle,"player:disconnect");
         console.log("Le client fermer le jeu");
-		battle.clients.every(function(battleClient, index){
-			if (client.socket === battleClient.socket){
-				battle.clients.splice(index, 1);
-				battle.engine.pushTask(battle.engine.removePlayer, battleClient.player);
-				return false;
-			}
-			else{
-				return true;
-			}
-		});
 	});
 	
 	client.socket.on('message', function(data){	
@@ -113,7 +102,6 @@ function clientSetup(battle, client){
 	});
 
     client.socket.on('pong',function(){
-        console.log('pong reçu');
         clearTimeout(client.timeout);
         client.idle = setTimeout(ping, inactivity.timeout, client, battle);
     });
@@ -175,9 +163,12 @@ function clientRegisterListener(data){
             battle.clients.every(function(cl){
                 if (cl.token == token){
                     client = cl;
+                    console.log("Reconnection du client");
                     return false;
                 }
                 else{
+                    console.log("cl.token = "+cl.token);
+                    console.log("token = "+token);
                     return true;
                 }
             });
@@ -188,12 +179,13 @@ function clientRegisterListener(data){
                 battle.engine.notifyPlayerInformation();
                 sendJSON(client, {
                     type: 'identity',
-                    id: player.id
+                    id: client.player.id
                 });
                 battleBroadcast(battle, {type: 'battle-start'});
             }
 			// En cas de nouvelle connexion :create client tracking object
             else {
+                console.log("Nouvelle connection");
                 var client = {
                     socket: this,
                     token: token,
