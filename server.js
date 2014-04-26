@@ -48,6 +48,10 @@ function battleSetup(battle){
 
     battle.engine.on('battle:end', function(){
         battle.engine.stop();
+        battle.clients.forEach(function(client){
+            clearTimeout(client.timeout);
+            clearTimeout(client.idle);
+        });
         BattleIndex.endBattle(battle).then(function(){
 			battleBroadcast(battle, {
 				type: 'battle-end'
@@ -66,8 +70,10 @@ function clientTimeout(client,battle) {
 }
 
 function ping(client,battle) {
-    client.socket.ping();
-    client.timeout = setTimeout(clientTimeout, inactivity.timeout, client, battle);
+    if(client.socket != null) {
+        client.socket.ping();
+        client.timeout = setTimeout(clientTimeout, inactivity.timeout, client, battle);
+    }
 }
 
 function socketSetup(battle,client) {
