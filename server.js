@@ -59,6 +59,7 @@ function battleSetup(battle){
 }
 
 function clientTimeout(client,battle) {
+    clearTimeout(client.idle);
     client.socket = null;
     battleBroadcast(battle,"player:disconnect");
     console.log("Le client vient de timeout");
@@ -77,6 +78,9 @@ function clientSetup(battle, client){
 	client.socket.on('close', function(){
         clearTimeout(client.timeout);
         clearTimeout(client.idle);
+        client.socket = null;
+        battleBroadcast(battle,"player:disconnect");
+        console.log("Le client fermer le jeu");
 		battle.clients.every(function(battleClient, index){
 			if (client.socket === battleClient.socket){
 				battle.clients.splice(index, 1);
