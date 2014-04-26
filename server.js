@@ -3,9 +3,8 @@
 var WebSocketServer = require('ws').Server,
 	server = new WebSocketServer({port: 8080});
 var BattleIndex = require('./BattleIndex.js'),
-	API = require('./API.js');
-
-var inactivityTime = 15000;
+	API = require('./API.js'),
+    inactivity = require('./conf.json')[inactivity];
 
 console.log('Socket started');
 
@@ -51,7 +50,7 @@ function battleSetup(battle){
         battle.engine.stop();
         BattleIndex.endBattle(battle).then(function(){
 			battleBroadcast(battle, {
-				type: 'battle-end',
+				type: 'battle-end'
 			});
         });
     });
@@ -59,20 +58,21 @@ function battleSetup(battle){
 	battle.setup = true;
 }
 
-function clientTimeout(client) {
+function clientTimeout(client,battle) {
     client.socket = null;
+    battleBroadcast(battle,"player:disconnect");
     console.log("Le client vient de timeout");
 }
 
-function ping(client) {
+function ping(client,battle) {
     client.socket.ping();
     console.log('ping envoyé');
-    client.timeout = setTimeout(function(){clientTimeout(client)},8000);
+    client.timeout = setTimeout(function(){clientTimeout(client,battle)},inactivity.timeout);
 }
 
 function clientSetup(battle, client){
 	console.log('Performing client setup');
-    client.idle = setTimeout(function(){ping(client)},inactivityTime);
+    client.idle = setTimeout(function(){ping(client,battle)},inactivity.timeout);
 
 	client.socket.on('close', function(){
         clearTimeout(client.timeout);
@@ -93,7 +93,7 @@ function clientSetup(battle, client){
 		data = JSON.parse(data);
 
         clearTimeout(client.idle);
-        client.idle = setTimeout(function(){ping(client)},inactivityTime);
+        client.idle = setTimeout(function(){ping(client,battle)},inactivity.timeout);
 
 		switch (data.type){
 			case 'attack':
@@ -111,7 +111,7 @@ function clientSetup(battle, client){
     client.socket.on('pong',function(){
         console.log('pong reçu');
         clearTimeout(client.timeout);
-        client.idle = setTimeout(function(){ping(client)},15000);
+        client.idle = setTimeout(function(){ping(client,battle)},15000);
     });
 	
 	//creates the player inside the battle
