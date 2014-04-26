@@ -4,7 +4,7 @@ var WebSocketServer = require('ws').Server,
 	server = new WebSocketServer({port: 8080});
 var BattleIndex = require('./BattleIndex.js'),
 	API = require('./API.js'),
-    inactivity = require('./conf.json')[inactivity];
+    inactivity = require('./conf.json').inactivity;
 
 console.log('Socket started');
 
@@ -68,12 +68,12 @@ function clientTimeout(client,battle) {
 function ping(client,battle) {
     client.socket.ping();
     console.log('ping envoyé');
-    client.timeout = setTimeout(function(){clientTimeout(client,battle)},inactivity.timeout);
+    client.timeout = setTimeout(clientTimeout, inactivity.timeout, client, battle);
 }
 
 function clientSetup(battle, client){
 	console.log('Performing client setup');
-    client.idle = setTimeout(function(){ping(client,battle)},inactivity.timeout);
+    client.idle = setTimeout(ping, inactivity.timeout, client, battle);
 
 	client.socket.on('close', function(){
         clearTimeout(client.timeout);
@@ -97,7 +97,7 @@ function clientSetup(battle, client){
 		data = JSON.parse(data);
 
         clearTimeout(client.idle);
-        client.idle = setTimeout(function(){ping(client,battle)},inactivity.timeout);
+        client.idle = setTimeout(ping, inactivity.timeout, client, battle);
 
 		switch (data.type){
 			case 'attack':
@@ -115,7 +115,7 @@ function clientSetup(battle, client){
     client.socket.on('pong',function(){
         console.log('pong reçu');
         clearTimeout(client.timeout);
-        client.idle = setTimeout(function(){ping(client,battle)},15000);
+        client.idle = setTimeout(ping, inactivity.timeout, client, battle);
     });
 	
 	//creates the player inside the battle
