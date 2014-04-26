@@ -70,41 +70,45 @@ function ping(client,battle) {
     client.timeout = setTimeout(clientTimeout, inactivity.timeout, client, battle);
 }
 
-function clientSetup(battle, client){
-	console.log('Performing client setup');
-    client.idle = setTimeout(ping, inactivity.timeout, client, battle);
-
-	client.socket.on('close', function(){
+function socketSetup(battle,client) {
+    client.socket.on('close', function(){
         clearTimeout(client.timeout);
         clearTimeout(client.idle);
         client.socket = null;
         battleBroadcast(battle,"player:disconnect");
         console.log("Le client fermer le jeu");
-	});
-	
-	client.socket.on('message', function(data){	
-		data = JSON.parse(data);
+    });
+
+    client.socket.on('message', function(data){
+        data = JSON.parse(data);
 
         clearTimeout(client.idle);
         client.idle = setTimeout(ping, inactivity.timeout, client, battle);
 
-		switch (data.type){
-			case 'attack':
-				battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament, data.room);
-				break;
+        switch (data.type){
+            case 'attack':
+                battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament, data.room);
+                break;
             case 'powerup':
                 battle.engine.pushTask(battle.engine.changePower, 'up', client.player, data.targetId, data.targetType);
                 break;
             case 'powerdown':
                 battle.engine.pushTask(battle.engine.changePower, 'down', client.player, data.targetId, data.targetType);
                 break;
-		}
-	});
+        }
+    });
 
     client.socket.on('pong',function(){
         clearTimeout(client.timeout);
         client.idle = setTimeout(ping, inactivity.timeout, client, battle);
     });
+}
+
+function clientSetup(battle, client){
+	console.log('Performing client setup');
+    client.idle = setTimeout(ping, inactivity.timeout, client, battle);
+
+    socketSetup(battle,client);
 	
 	//creates the player inside the battle
 	API.getShip(client.token)
@@ -167,8 +171,6 @@ function clientRegisterListener(data){
                     return false;
                 }
                 else{
-                    console.log("cl.token = "+cl.token);
-                    console.log("token = "+token);
                     return true;
                 }
             });
@@ -176,12 +178,14 @@ function clientRegisterListener(data){
             // En cas de reconnexion
             if (client != null) {
                 client.socket = this;
+                socketSetup(battle,client);
                 battle.engine.notifyPlayerInformation();
                 sendJSON(client, {
                     type: 'identity',
                     id: client.player.id
                 });
                 battleBroadcast(battle, {type: 'battle-start'});
+                client.idle = setTimeout(ping, inactivity.timeout, client, battle);
             }
 			// En cas de nouvelle connexion :create client tracking object
             else {
