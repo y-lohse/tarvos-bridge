@@ -114,7 +114,7 @@ function clientSetup(battle, client){
 	console.log('Performing client setup');
     client.idle = setTimeout(ping, inactivity.timeout, client, battle);
 
-    socketSetup(battle,client);
+    socketSetup(battle, client);
 	
 	//creates the player inside the battle
 	API.getShip(client.token)
@@ -139,6 +139,12 @@ function clientSetup(battle, client){
 		player.on('module:state', function(data){
 			data.type = 'module-state';
 			sendJSON(client, data);
+		});
+		
+		player.on('shield:state', function(data){
+			data.type = 'shield-state';
+			data.player = player.id;
+			battleBroadcast(battle, data);
 		});
 		
 		console.log('Client setup complete');
