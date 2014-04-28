@@ -93,12 +93,15 @@ function socketSetup(battle,client) {
 
         switch (data.type){
             case 'attack':
+                if (client.player === null || data.target === null || data.armament === null) break;
                 battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament, data.room);
                 break;
             case 'powerup':
+                if (client.player === null || data.targetId  === null || data.targetType === null ) break;
                 battle.engine.pushTask(battle.engine.changePower, 'up', client.player, data.targetId, data.targetType);
                 break;
             case 'powerdown':
+                if (client.player === null || data.targetId  === null || data.targetType === null ) break;
                 battle.engine.pushTask(battle.engine.changePower, 'down', client.player, data.targetId, data.targetType);
                 break;
         }
