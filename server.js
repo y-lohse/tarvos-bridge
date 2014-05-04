@@ -139,9 +139,25 @@ function clientSetup(battle, client){
 			sendJSON(client, data);
 		});
 		
+		player.on('armament:energy', function(data){
+			data.type = 'armament-energy';
+			sendJSON(client, data);
+		});
+		
+		player.on('module:energy', function(data){
+			data.type = 'module-energy';
+			sendJSON(client, data);
+		});
+		
+		player.on('module:oxygen', function(data){
+			data.type = 'module-oxygen';
+			sendJSON(client, data);
+		});
+		
 		player.on('module:state', function(data){
 			data.type = 'module-state';
-			sendJSON(client, data);
+			data.player = player.id;
+			battleBroadcast(battle, data);
 		});
 		
 		player.on('shield:state', function(data){
