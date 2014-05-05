@@ -102,7 +102,7 @@ function socketSetup(battle,client) {
 
         switch (data.type){
             case 'attack':
-                if (client.player === null || !isInteger(data.target) || data.armament === null) break;
+                if (client.player === null || !isInteger(data.target) || !isInteger(data.armament) || !isInteger(data.room) ) break;
                 battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament, data.room);
                 break;
             case 'powerup':
