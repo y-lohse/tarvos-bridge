@@ -76,6 +76,15 @@ function ping(client,battle) {
     }
 }
 
+function isInteger(data) {
+    if (data && data !== null && data === parseInt(data)) return true;
+    else {
+        console.log("Warning, data : "+data+" is not an integer");
+
+        return false;
+    }
+}
+
 function socketSetup(battle,client) {
     client.socket.on('close', function(){
         clearTimeout(client.timeout);
@@ -93,15 +102,15 @@ function socketSetup(battle,client) {
 
         switch (data.type){
             case 'attack':
-                if (client.player === null || data.target === null || data.armament === null) break;
+                if (client.player === null || !isInteger(data.target) || data.armament === null) break;
                 battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.target, data.armament, data.room);
                 break;
             case 'powerup':
-                if (client.player === null || data.targetId  === null || data.targetType === null ) break;
+                if (client.player === null || !isInteger(data.targetId) || data.targetType === null ) break;
                 battle.engine.pushTask(battle.engine.changePower, 'up', client.player, data.targetId, data.targetType);
                 break;
             case 'powerdown':
-                if (client.player === null || data.targetId  === null || data.targetType === null ) break;
+                if (client.player === null || !isInteger(data.targetId) || data.targetType === null ) break;
                 battle.engine.pushTask(battle.engine.changePower, 'down', client.player, data.targetId, data.targetType);
                 break;
         }
