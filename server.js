@@ -71,7 +71,11 @@ function clientTimeout(client,battle) {
 
 function ping(client,battle) {
     if(client.socket != null) {
-        client.socket.ping();
+        try {
+            client.socket.ping();
+        } catch (err) {
+            console.log("Warning : can't ping client - "+err);
+        }
         client.timeout = setTimeout(clientTimeout, inactivity.timeout, client, battle);
     }
 }
@@ -79,7 +83,7 @@ function ping(client,battle) {
 function isInteger(data) {
     if (data && data !== null && data === parseInt(data)) return true;
     else {
-        console.log("Warning, data : "+data+" is not an integer");
+        console.log("Warning : data : "+data+" is not an integer");
 
         return false;
     }
@@ -91,10 +95,11 @@ function socketSetup(battle,client) {
         clearTimeout(client.idle);
         client.socket = null;
         battleBroadcast(battle,"player:disconnect");
-        console.log("Le client fermer le jeu");
+        console.log("Client closed the game");
     });
 
     client.socket.on('message', function(data){
+        if(!data || data === null) return;
         data = JSON.parse(data);
 
         clearTimeout(client.idle);
