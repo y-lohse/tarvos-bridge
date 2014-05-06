@@ -139,34 +139,49 @@ function clientSetup(battle, client){
 		player.on('player:energy', function(energy){
 			sendJSON(client, {
 				type: 'energy',
+				energy:energy
+			});
+		});
+		
+		player.on('armament:state', function(id, state){
+			sendJSON(client, {
+				id: id,
+				type: 'armament-state',
+				state: state
+			});
+		});
+		
+		player.on('armament:energy', function(id, energy){
+			sendJSON(client, {
+				id: id,
+				type:'armament-energy',
 				energy: energy
 			});
 		});
 		
-		player.on('armament:state', function(data){
-			data.type = 'armament-state';
-			sendJSON(client, data);
+		player.on('module:energy', function(id, energy){
+			sendJSON(client, {
+				id: id,
+				type:'module-energy',
+				energy: energy
+			});
 		});
 		
-		player.on('armament:energy', function(data){
-			data.type = 'armament-energy';
-			sendJSON(client, data);
+		player.on('module:oxygen', function(id, oxygen){
+			sendJSON(client, {
+				id: id,
+				type: 'module-oxygen',
+				oxygen: oxygen
+			});
 		});
 		
-		player.on('module:energy', function(data){
-			data.type = 'module-energy';
-			sendJSON(client, data);
-		});
-		
-		player.on('module:oxygen', function(data){
-			data.type = 'module-oxygen';
-			sendJSON(client, data);
-		});
-		
-		player.on('module:state', function(data){
-			data.type = 'module-state';
-			data.player = player.id;
-			battleBroadcast(battle, data);
+		player.on('module:state', function(id, state){
+			battleBroadcast(battle, {
+				type: 'module-state',
+				id: id,
+				state: state,
+				player: player.id
+			});
 		});
 		
 		player.on('shield:state', function(data){
