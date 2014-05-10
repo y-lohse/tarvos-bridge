@@ -136,7 +136,7 @@ function clientSetup(battle, client){
 	//creates the player inside the battle
 	API.getShip(client.token)
 	.then(function(data){
-		var player = battle.engine.addPlayer(data.name, data.hp, data.armaments, data.type, data.energy, data.modules);
+		var player = battle.engine.addPlayer(data.name, data.hp, data.armaments, data.fighters, data.type, data.energy, data.modules);
 		
 		//assign the reference to the actual player object
 		client.player = player;
@@ -163,6 +163,22 @@ function clientSetup(battle, client){
 				energy: energy
 			});
 		});
+
+        player.on('fighter:state', function(id, state){
+            sendJSON(client, {
+                id: id,
+                type: 'fighter-state',
+                state: state
+            });
+        });
+
+        player.on('fighter:energy', function(id, energy){
+            sendJSON(client, {
+                id: id,
+                type:'fighter-energy',
+                energy: energy
+            });
+        });
 		
 		player.on('module:energy', function(id, energy){
 			sendJSON(client, {
