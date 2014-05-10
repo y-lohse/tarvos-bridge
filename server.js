@@ -192,6 +192,15 @@ function clientSetup(battle, client){
                 energy: energy
             });
         });
+
+        player.on('module:hp', function(id, hp, energy){
+            sendJSON(client, {
+                id: id,
+                type:'module-hp',
+                energy: energy,
+                hp : hp
+            });
+        });
 		
 		player.on('module:energy', function(id, energy){
 			sendJSON(client, {
