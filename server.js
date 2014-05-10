@@ -108,7 +108,20 @@ function socketSetup(battle,client) {
         switch (data.type){
             case 'attack':
                 if (client.player === null || !isInteger(data.playerId) || !isInteger(data.armamentId) || !isInteger(data.roomId) ) break;
-                battle.engine.pushTask(battle.engine.attackPlayer, client.player, data.playerId, data.armamentId, data.roomId);
+                var player;
+                battle.clients.every(function(client){
+                	if (client.player.id === data.playerId){
+                		player = client.player;
+                		return false;
+                	}
+                	else{
+                		return true;
+                	}
+                });
+                
+                var armament = client.player.getArmament(data.armamentId),
+                	module = player.getModuleById(data.roomId);
+                battle.engine.pushTask(battle.engine.attackPlayer, player, armament, module);
                 break;
             case 'powerup':
                 if (client.player === null || !isInteger(data.targetId) || data.targetType === null ) break;
@@ -219,6 +232,9 @@ function clientSetup(battle, client){
 		});
 		
 		if (battle.clients.length == 2){
+			battle.clients[0].player.target = battle.clients[1].player;
+			battle.clients[1].player.target = battle.clients[0].player;
+			
 			battle.engine.start();
 			battleBroadcast(battle, {type: 'battle-start'});
 		}
