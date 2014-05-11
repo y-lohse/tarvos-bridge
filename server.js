@@ -202,13 +202,13 @@ function clientSetup(battle, client){
             });
         });
 
-            player.on('module:hp', function(id, breach){
-                sendJSON(client, {
-                    id: id,
-                    type:'module-breach',
-                    breach: breach
-                });
-            });
+		player.on('module:breached', function(id, breached){
+			sendJSON(client, {
+				id: id,
+				type:'module-breached',
+				breach: breached
+			});
+		});
 		
 		player.on('module:energy', function(id, energy){
 			sendJSON(client, {
