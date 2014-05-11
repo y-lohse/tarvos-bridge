@@ -215,7 +215,7 @@ function clientSetup(battle, client){
 			sendJSON(client, {
 				id: id,
 				type:'module-breached',
-				breach: breached
+				breached: breached
 			});
 		});
 		
