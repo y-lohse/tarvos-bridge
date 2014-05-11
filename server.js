@@ -178,11 +178,12 @@ function clientSetup(battle, client){
 		});
 
         player.on('fighter:state', function(id, state){
-            sendJSON(client, {
-                id: id,
-                type: 'fighter-state',
-                state: state
-            });
+            battleBroadcast(battle, {
+				type: 'fighter-state',
+				id: id,
+				state: state,
+				player: player.id
+			});
         });
 
         player.on('fighter:energy', function(id, energy){
@@ -240,16 +241,6 @@ function clientSetup(battle, client){
 			data.player = player.id;
 			battleBroadcast(battle, data);
 		});
-		
-		player.on('fighter:deploy', function(id, name, deployed){
-            sendJSON(client, {
-                id:id,
-                name:name,
-                type:'fighter-deploy',
-                player:player.id,
-                deployed: deployed
-            });
-        });
 		
 		console.log('Client setup complete');
 		
