@@ -201,6 +201,14 @@ function clientSetup(battle, client){
                 hp : hp
             });
         });
+
+            player.on('module:hp', function(id, breach){
+                sendJSON(client, {
+                    id: id,
+                    type:'module-breach',
+                    breach: breach
+                });
+            });
 		
 		player.on('module:energy', function(id, energy){
 			sendJSON(client, {
