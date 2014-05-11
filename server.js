@@ -160,7 +160,16 @@ function clientSetup(battle, client){
 				energy:energy
 			});
 		});
-		
+
+        player.on('player:isTargeted', function(id,name,deploy){
+            sendJSON(client, {
+                id:id,
+                name:name,
+                type: 'energy',
+                deploy:deploy
+            });
+        });
+
 		player.on('armament:state', function(id, state){
 			sendJSON(client, {
 				id: id,
