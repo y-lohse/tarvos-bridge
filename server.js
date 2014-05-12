@@ -187,11 +187,12 @@ function clientSetup(battle, client){
         });
 
         player.on('fighter:energy', function(id, energy){
-            sendJSON(client, {
-                id: id,
-                type:'fighter-energy',
-                energy: energy
-            });
+            battleBroadcast(battle, {
+				type: 'fighter-energy',
+				id: id,
+				energy: energy,
+				player: player.id
+			});
         });
 
         player.on('module:hp', function(id, hp, energy){
