@@ -149,7 +149,7 @@ function clientSetup(battle, client){
 	//creates the player inside the battle
 	API.getShip(client.token)
 	.then(function(data){
-		var player = battle.engine.addPlayer(data.name, data.hp, data.armaments, data.fighters, data.type, data.energy, data.modules);
+		var player = battle.engine.addPlayer(data.name, data.hp, data.armaments, data.fighters, data.type, data.energy, data.modules, data.crews);
 		
 		//assign the reference to the actual player object
 		client.player = player;
