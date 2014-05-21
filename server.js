@@ -131,6 +131,8 @@ function socketSetup(battle,client) {
                 if (client.player === null || !isInteger(data.targetId) || data.targetType === null ) break;
                 battle.engine.pushTask(battle.engine.changePower, 'down', client.player, data.targetId, data.targetType);
                 break;
+            case 'movecrew':
+                battle.engine.pushTask()
         }
     });
 
