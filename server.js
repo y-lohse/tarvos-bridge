@@ -12,15 +12,14 @@ console.log('Socket started');
 function sendJSON(client, data){
     if(client.socket != null) {
         try{
-        	data = JSON.stringify(data);
-        	
-        	 client.socket.send(data, function(err){
+        	 client.socket.send(JSON.stringify(data), function(err){
 				if (err) console.log('error while sending data to client');
 			});
 		}
         catch(e){
         	console.log(e);
         	console.log(e.stack);
+        	console.log(data);
         }
     }
 }
