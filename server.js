@@ -139,7 +139,7 @@ function socketSetup(battle,client) {
                 battle.engine.pushTask(battle.engine.changePower, 'down', client.player, data.targetId, data.targetType);
                 break;
             case 'movecrew':
-                battle.engine.pushTask(battle.engine.moveCrew, data.crewId, data.moduleId);
+                battle.engine.pushTask(battle.engine.moveCrew, client.player, data.crewId, data.moduleId);
                 break;
         }
     });
@@ -251,6 +251,15 @@ function clientSetup(battle, client){
 			data.type = 'shield-state';
 			data.player = player.id;
 			battleBroadcast(battle, data);
+		});
+		
+		player.on('crew:module', function(crew, mod){
+			sendJSON(client, {
+				type: 'crew-module',
+				player:player.id,
+				crew: crew,
+				module: mod
+			});
 		});
 		
 		console.log('Client setup complete');
