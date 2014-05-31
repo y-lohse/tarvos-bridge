@@ -139,7 +139,7 @@ function socketSetup(battle,client) {
                 battle.engine.pushTask(battle.engine.changePower, 'down', client.player, data.targetId, data.targetType);
                 break;
             case 'movecrew':
-                battle.engine.pushTask();
+                battle.engine.pushTask(battle.engine.moveCrew, data.crewId, data.moduleId);
                 break;
         }
     });
