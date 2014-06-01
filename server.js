@@ -262,6 +262,15 @@ function clientSetup(battle, client){
 			});
 		});
 		
+		player.on('crew:hp', function(crew, hp){
+			sendJSON(client, {
+				type: 'crew-hp',
+				player:player.id,
+				crew: crew,
+				hp: hp
+			});
+		});
+		
 		console.log('Client setup complete');
 		
 		sendJSON(client, {
