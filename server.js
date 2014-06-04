@@ -262,6 +262,16 @@ function clientSetup(battle, client){
 			});
 		});
 		
+		player.on('crew:move', function(crew, x, y){
+			sendJSON(client, {
+				type: 'crew-move',
+				player:player.id,
+				crew: crew,
+				x: x,
+				y: y
+			});
+		});
+		
 		player.on('crew:hp', function(crew, hp){
 			sendJSON(client, {
 				type: 'crew-hp',
