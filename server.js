@@ -53,6 +53,11 @@ function battleSetup(battle){
 		});
 	});
 
+    battle.engine.on('battle:start', function(){
+        battleBroadcast("battle:start");
+    });
+
+
     battle.engine.on('battle:end', function(){
         battle.engine.stop();
         battle.clients.forEach(function(client){
@@ -292,8 +297,8 @@ function clientSetup(battle, client){
 			battle.clients[0].player.target = battle.clients[1].player;
 			battle.clients[1].player.target = battle.clients[0].player;
 			
-			battle.engine.start();
-			battleBroadcast(battle, {type: 'battle-start'});
+			battle.engine.wait();
+			battleBroadcast(battle, {type: 'battle-wait'});
 		}
 	});
 }
