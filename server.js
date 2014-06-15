@@ -211,7 +211,7 @@ function clientSetup(battle, client){
         });
 
         player.on('module:hp', function(id, hp, energy){
-            sendJSON(client, {
+            battleBroadcast(battle, {
                 id: id,
                 type:'module-hp',
                 energy: energy,
