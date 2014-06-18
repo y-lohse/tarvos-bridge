@@ -146,6 +146,13 @@ function socketSetup(battle,client) {
             case 'movecrew':
                 battle.engine.pushTask(battle.engine.moveCrew, client.player, data.crewId, data.moduleId);
                 break;
+            case 'opendoor':
+                battle.engine.pushTask(battle.engine.manageDoor, client.player, doorId, true);
+                break;
+            case 'closedoor':
+                battle.engine.pushTask(battle.engine.manageDoor, doorId, false);
+                break;
+
         }
     });
 
