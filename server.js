@@ -54,7 +54,7 @@ function battleSetup(battle){
 	});
 
     battle.engine.on('battle:start', function(){
-        battleBroadcast(battle,{type: 'battle:start'});
+        battleBroadcast(battle,{type: 'battle-start'});
     });
 
 
