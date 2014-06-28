@@ -39,13 +39,6 @@ function battleSetup(battle){
 	//start liste,ers for battle events
 	console.log('Performing battle setup');
 	
-	battle.engine.on('players:update', function(players){
-		battleBroadcast(battle, {
-			type: 'players',
-			players: players
-		});
-	});
-	
 	battle.engine.on('players:hp', function(hps){
 		battleBroadcast(battle, {
 			type: 'hp',
@@ -175,6 +168,13 @@ function clientSetup(battle, client){
 		
 		//assign the reference to the actual player object
 		client.player = player;
+		
+		player.on('player:info', function(player){
+			sendJSON(client, {
+				type: 'player:info',
+				info:player
+			});
+		});
 		
 		player.on('player:energy', function(energy){
 			sendJSON(client, {
@@ -345,7 +345,7 @@ function clientRegisterListener(data){
                     type: 'identity',
                     id: client.player.id
                 });
-                battleBroadcast(battle, {type: 'battle-start'});
+                battleBroadcast(battle, {type: 'battle-start'});//@FIXME: pas sur que la bataille ai démaré
                 client.idle = setTimeout(ping, inactivity.timeout, client, battle);
             }
 			// En cas de nouvelle connexion :create client tracking object
