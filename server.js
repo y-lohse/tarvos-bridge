@@ -169,6 +169,7 @@ function clientSetup(battle, client){
 		//assign the reference to the actual player object
 		client.player = player;
 		
+		//rewritten
 		player.on('player:info', function(player){
 			sendJSON(client, {
 				type: 'player:info',
@@ -182,7 +183,45 @@ function clientSetup(battle, client){
 				energy:energy
 			});
 		});
+		
+		player.on('armament:energy', function(id, energy){
+			sendJSON(client, {
+				id: id,
+				type:'armament:energy',
+				energy: energy
+			});
+		});
+		
+		player.on('fighter:energy', function(id, energy){
+            battleBroadcast(battle, {
+				type: 'fighter:energy',
+				id: id,
+				energy: energy,
+				player: player.id
+			});
+        });
+        
+        player.on('module:energy', function(id, energy){
+			sendJSON(client, {
+				id: id,
+				type:'module:energy',
+				energy: energy
+			});
+		});
+		
+		player.on('shield:state', function(playerId, shieldId, energy, shield){
+			sendJSON(client, {
+				type: 'shield:state',
+				player: playerId,
+				id: shieldId,
+				energy: energy,
+				shield: shield
+			});
+		});
 
+
+				
+		//needs rewrite
 		player.on('armament:state', function(id, state){
 			sendJSON(client, {
 				id: id,
@@ -190,29 +229,12 @@ function clientSetup(battle, client){
 				state: state
 			});
 		});
-		
-		player.on('armament:energy', function(id, energy){
-			sendJSON(client, {
-				id: id,
-				type:'armament-energy',
-				energy: energy
-			});
-		});
-
+        
         player.on('fighter:state', function(id, state){
             battleBroadcast(battle, {
 				type: 'fighter-state',
 				id: id,
 				state: state,
-				player: player.id
-			});
-        });
-
-        player.on('fighter:energy', function(id, energy){
-            battleBroadcast(battle, {
-				type: 'fighter-energy',
-				id: id,
-				energy: energy,
 				player: player.id
 			});
         });
@@ -234,14 +256,6 @@ function clientSetup(battle, client){
 			});
 		});
 		
-		player.on('module:energy', function(id, energy){
-			sendJSON(client, {
-				id: id,
-				type:'module-energy',
-				energy: energy
-			});
-		});
-		
 		player.on('module:oxygen', function(id, oxygen){
 			sendJSON(client, {
 				id: id,
@@ -257,12 +271,6 @@ function clientSetup(battle, client){
 				state: state,
 				player: player.id
 			});
-		});
-		
-		player.on('shield:state', function(data){
-			data.type = 'shield-state';
-			data.player = player.id;
-			battleBroadcast(battle, data);
 		});
 		
 		player.on('crew:module', function(crew, mod){
