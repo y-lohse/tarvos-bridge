@@ -218,27 +218,46 @@ function clientSetup(battle, client){
 				shield: shield
 			});
 		});
-
-
-				
-		//needs rewrite
-		player.on('armament:state', function(id, state){
+		
+		player.on('crew:move', function(crew, x, y){
 			sendJSON(client, {
-				id: id,
-				type: 'armament-state',
+				type: 'crew:move',
+				player:player.id,
+				crew: crew,
+				x: x,
+				y: y
+			});
+		});
+		
+		player.on('crew:hp', function(crew, hp){
+			sendJSON(client, {
+				type: 'crew:hp',
+				player:player.id,
+				crew: crew,
+				hp: hp
+			});
+		});
+		
+		player.on('armament:state', function(armament, player, state){
+			sendJSON(client, {
+				id: armament,
+				player: player,
+				type: 'armament:state',
 				state: state
 			});
 		});
-        
-        player.on('fighter:state', function(id, state){
+		
+		player.on('fighter:state', function(fighter, player, state){
             battleBroadcast(battle, {
-				type: 'fighter-state',
-				id: id,
+				type: 'fighter:state',
+				id: fighter,
 				state: state,
-				player: player.id
+				player: player
 			});
         });
 
+				
+		//needs rewrite
         player.on('module:hp', function(id, hp, energy){
             battleBroadcast(battle, {
                 id: id,
@@ -270,34 +289,6 @@ function clientSetup(battle, client){
 				id: id,
 				state: state,
 				player: player.id
-			});
-		});
-		
-		player.on('crew:module', function(crew, mod){
-			sendJSON(client, {
-				type: 'crew-module',
-				player:player.id,
-				crew: crew,
-				module: mod
-			});
-		});
-		
-		player.on('crew:move', function(crew, x, y){
-			sendJSON(client, {
-				type: 'crew-move',
-				player:player.id,
-				crew: crew,
-				x: x,
-				y: y
-			});
-		});
-		
-		player.on('crew:hp', function(crew, hp){
-			sendJSON(client, {
-				type: 'crew-hp',
-				player:player.id,
-				crew: crew,
-				hp: hp
 			});
 		});
 		
