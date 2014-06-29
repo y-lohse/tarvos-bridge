@@ -200,14 +200,6 @@ function clientSetup(battle, client){
 				player: player.id
 			});
         });
-        
-        player.on('module:energy', function(id, energy){
-			sendJSON(client, {
-				id: id,
-				type:'module:energy',
-				energy: energy
-			});
-		});
 		
 		player.on('shield:state', function(playerId, shieldId, energy, shield){
 			sendJSON(client, {
@@ -248,47 +240,48 @@ function clientSetup(battle, client){
 		});
 		
 		player.on('fighter:state', function(fighter, player, state){
-            battleBroadcast(battle, {
+        	sendJSON(client, {
 				type: 'fighter:state',
 				id: fighter,
 				state: state,
 				player: player
 			});
         });
-
-				
-		//needs rewrite
-        player.on('module:hp', function(id, hp, energy){
-            battleBroadcast(battle, {
-                id: id,
-                type:'module-hp',
-                energy: energy,
-                hp : hp
-            });
-        });
-
-		player.on('module:breached', function(id, breached){
+        
+        player.on('module:energy', function(moduleId, playerId, energy){
 			sendJSON(client, {
-				id: id,
-				type:'module-breached',
-				breached: breached
+				id: moduleId,
+				player: playerId,
+				type:'module:energy',
+				energy: energy
 			});
 		});
-		
-		player.on('module:oxygen', function(id, oxygen){
+        
+        player.on('module:oxygen', function(moduleId, playerId, oxygen){
 			sendJSON(client, {
-				id: id,
-				type: 'module-oxygen',
+				id: moduleId,
+				player: playerId,
+				type: 'module:oxygen',
 				oxygen: oxygen
 			});
 		});
-		
-		player.on('module:state', function(id, state){
-			battleBroadcast(battle, {
-				type: 'module-state',
-				id: id,
-				state: state,
-				player: player.id
+
+        player.on('module:hp', function(moduleId, playerId, hp, energy){
+            sendJSON(client, {
+				id: moduleId,
+                player: playerId,
+                type:'module:hp',
+                energy: energy,
+                hp : hp
+			});
+        });
+
+		player.on('module:breached', function(moduleId, playerId, breached){
+			sendJSON(client, {
+				id: moduleId,
+				player: playerId,
+				type:'module:breached',
+				breached: breached
 			});
 		});
 		
