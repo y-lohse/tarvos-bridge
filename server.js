@@ -47,9 +47,8 @@ function battleSetup(battle){
 	});
 
     battle.engine.on('battle:start', function(){
-        battleBroadcast(battle,{type: 'battle-start'});
+        battleBroadcast(battle, {type: 'battle-start'});
     });
-
 
     battle.engine.on('battle:end', function(){
         battle.engine.stop();
@@ -193,6 +192,7 @@ function clientSetup(battle, client){
 		});
 		
 		player.on('fighter:energy', function(id, energy){
+            //@TODo:send json, pas boradcast je pense
             battleBroadcast(battle, {
 				type: 'fighter:energy',
 				id: id,
@@ -201,7 +201,7 @@ function clientSetup(battle, client){
 			});
         });
 		
-		player.on('shield:state', function(playerId, shieldId, energy, shield){
+		player.on('shield:state', function(playerId, shieldId, energy, shield, extra){			
 			sendJSON(client, {
 				type: 'shield:state',
 				player: playerId,
