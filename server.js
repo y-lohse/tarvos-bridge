@@ -239,6 +239,15 @@ function clientSetup(battle, client){
 			});
 		});
 		
+		player.on('armament:hp', function(armament, player, hp){
+			sendJSON(client, {
+				id: armament,
+				player: player,
+				type: 'armament:state',
+				hp: hp
+			});
+		});
+		
 		player.on('fighter:state', function(fighter, player, state){
         	sendJSON(client, {
 				type: 'fighter:state',
