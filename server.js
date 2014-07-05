@@ -183,23 +183,6 @@ function clientSetup(battle, client){
 			});
 		});
 		
-		player.on('armament:energy', function(id, energy){
-			sendJSON(client, {
-				id: id,
-				type:'armament:energy',
-				energy: energy
-			});
-		});
-		
-		player.on('fighter:energy', function(id, energy){
-            sendJSON(client, {
-				type: 'fighter:energy',
-				id: id,
-				energy: energy,
-				player: player.id
-			});
-        });
-		
 		player.on('shield:state', function(playerId, shieldId, energy, shield, extra){			
 			sendJSON(client, {
 				type: 'shield:state',
@@ -247,11 +230,38 @@ function clientSetup(battle, client){
 			});
 		});
 		
+		player.on('armament:energy', function(armament, player, energy){
+			sendJSON(client, {
+				id: armament,
+				type:'armament:energy',
+				energy: energy,
+				player:player
+			});
+		});
+		
 		player.on('fighter:state', function(fighter, player, state){
         	sendJSON(client, {
 				type: 'fighter:state',
 				id: fighter,
 				state: state,
+				player: player
+			});
+        });
+        
+        player.on('fighter:hp', function(fighter, player, hp){
+        	sendJSON(client, {
+				type: 'fighter:hp',
+				id: fighter,
+				hp: hp,
+				player: player
+			});
+        });
+        
+        player.on('fighter:energy', function(fighter, player, energy){
+            sendJSON(client, {
+				type: 'fighter:energy',
+				id: fighter,
+				energy: energy,
 				player: player
 			});
         });
