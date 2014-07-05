@@ -341,11 +341,11 @@ function clientRegisterListener(data){
             if (client != null) {
                 client.socket = this;
                 socketSetup(battle,client);
-                battle.engine.notifyPlayerInformation();
                 sendJSON(client, {
                     type: 'identity',
                     id: client.player.id
                 });
+                battle.engine.notifyPlayerInformation();
                 battleBroadcast(battle, {type: 'battle-start'});//@FIXME: pas sur que la bataille ai démaré
                 client.idle = setTimeout(ping, inactivity.timeout, client, battle);
             }
