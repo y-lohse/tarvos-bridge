@@ -192,8 +192,7 @@ function clientSetup(battle, client){
 		});
 		
 		player.on('fighter:energy', function(id, energy){
-            //@TODo:send json, pas boradcast je pense
-            battleBroadcast(battle, {
+            sendJSON(client, {
 				type: 'fighter:energy',
 				id: id,
 				energy: energy,
