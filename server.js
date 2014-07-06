@@ -38,13 +38,6 @@ function battleBroadcast(battle, data){
 function battleSetup(battle){
 	//start liste,ers for battle events
 	console.log('Performing battle setup');
-	
-	battle.engine.on('players:hp', function(hps){
-		battleBroadcast(battle, {
-			type: 'hp',
-			hps: hps
-		});
-	});
 
     battle.engine.on('battle:start', function(){
         battleBroadcast(battle, {type: 'battle-start'});
@@ -180,6 +173,14 @@ function clientSetup(battle, client){
 			sendJSON(client, {
 				type: 'energy',
 				energy:energy
+			});
+		});
+		
+		player.on('player:hp', function(player, hp){
+			sendJSON(client, {
+				type: 'hp',
+				hp: hp,
+				player: player
 			});
 		});
 		
