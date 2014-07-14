@@ -63,7 +63,7 @@ function clientTimeout(client,battle) {
     clearTimeout(client.idle);
     client.socket = null;
     battleBroadcast(battle,"player:disconnect");
-    console.log("Le client vient de timeout");
+    console.log('Client timeout');
 }
 
 function ping(client,battle) {
@@ -201,7 +201,7 @@ function clientRegisterListener(data){
             battle.clients.every(function(cl){
                 if (cl.token == token){
                     client = cl;
-                    console.log("Reconnection du client");
+                    console.log('Client returned');
                     return false;
                 }
                 else{
@@ -223,7 +223,7 @@ function clientRegisterListener(data){
             }
 			// En cas de nouvelle connexion :create client tracking object
             else {
-                console.log("Nouvelle connection");
+                console.log('New client');
                 var client = {
                     socket: this,
                     token: token,
