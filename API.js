@@ -19,6 +19,7 @@ function apiCall(command){
 		function(error, stdout, stderr){
 			if (error || stderr){
 				console.log('Error during api call: %s', (error || stderr));
+                console.log(command);
 				def.reject(error);
 			}
 			else{
@@ -32,7 +33,7 @@ function apiCall(command){
 
 function getBattleId(token){
 	var def = Q.defer();
-	
+
 	apiCall('api:battle:get '+token.toString()).then(function(id){
 		def.resolve(parseInt(id));
 	}, def.reject);
