@@ -39,6 +39,10 @@ function battleSetup(battle){
 	//start liste,ers for battle events
 	console.log('Performing battle setup');
 
+    battle.engine.on('battle:wait', function(){
+        battleBroadcast(battle, {type: 'battle-wait'});
+    });
+    
     battle.engine.on('battle:start', function(){
         battleBroadcast(battle, {type: 'battle-start'});
     });
@@ -178,7 +182,6 @@ function clientSetup(battle, client){
 			battle.clients[1].player.target = battle.clients[0].player;
 			
 			battle.engine.wait();
-			battleBroadcast(battle, {type: 'battle-wait'});
 		}
 	});
 }
