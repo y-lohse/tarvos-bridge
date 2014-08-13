@@ -108,7 +108,7 @@ function socketSetup(battle,client) {
 
         switch (data.type){
             case 'attack':
-                if (client.player === null || !isInteger(data.playerId) || !isInteger(data.armamentId) || !isInteger(data.roomId) ) break;
+                if (!client.player || !isInteger(data.playerId) || !isInteger(data.armamentId) || !isInteger(data.roomId) ) break;
                 var player;
                 battle.clients.every(function(client){
                 	if (client.player.id === data.playerId){
