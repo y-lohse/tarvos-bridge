@@ -43,6 +43,10 @@ function battleSetup(battle){
         battleBroadcast(battle, {type: 'battle-wait'});
     });
     
+    battle.engine.on('battle:init', function(){
+        battleBroadcast(battle, {type: 'battle-init'});
+    });
+    
     battle.engine.on('battle:start', function(){
         battleBroadcast(battle, {type: 'battle-start'});
     });
@@ -221,6 +225,7 @@ function clientRegisterListener(data){
                     id: client.player.id
                 });
                 battle.engine.notifyPlayerInformation();
+                battleBroadcast(battle, {type: 'battle-init'});
                 battleBroadcast(battle, {type: 'battle-start'});//@FIXME: pas sur que la bataille ai démaré
                 client.idle = setTimeout(ping, inactivity.timeout, client, battle);
             }
