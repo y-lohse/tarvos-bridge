@@ -56,6 +56,18 @@ function battleSetup(battle){
         battle.clients.forEach(function(client){
             clearTimeout(client.timeout);
             clearTimeout(client.idle);
+            client.player.crews.forEach(function(crew){
+               clearTimeout(crew.oxygenTimeout);
+               clearTimeout(crew.pathTimeout);
+               clearTimeout(crew.healTimeout);
+            });
+            client.player.armaments.forEach(function(armament){
+               clearTimeout(armament.reloadTimeout);
+            });
+            client.player.modules.forEach(function(module){
+                clearTimeout(module.repairTimeout);
+            });
+
         });
         BattleIndex.endBattle(battle).then(function(){
 			battleBroadcast(battle, {
@@ -140,10 +152,10 @@ function socketSetup(battle,client) {
                 battle.engine.pushTask(battle.engine.moveCrew, client.player, data.crewId, data.moduleId);
                 break;
             case 'opendoor':
-                battle.engine.pushTask(battle.engine.manageDoor, client.player, doorId, true);
+                battle.engine.pushTask(battle.engine.manageDoor, client.player, data.doorId, true);
                 break;
             case 'closedoor':
-                battle.engine.pushTask(battle.engine.manageDoor, doorId, false);
+                battle.engine.pushTask(battle.engine.manageDoor, data.doorId, false);
                 break;
 
         }
