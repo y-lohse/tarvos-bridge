@@ -35,7 +35,9 @@ function getBattleId(token){
 	var def = Q.defer();
 
 	apiCall('api:battle:get '+token.toString()).then(function(id){
-		def.resolve(parseInt(id));
+        var id = parseInt(id);
+		if (id > 0) def.resolve(id);
+        else def.reject(id);
 	}, def.reject);
 	
 	return def.promise;

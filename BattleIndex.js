@@ -42,9 +42,7 @@ function getBattleByToken(token){
 			def.resolve(tokenBattle);
 		}
 	},
-	function(){
-		def.reject();
-	});
+	def.reject);
 	
 	return def.promise;
 }

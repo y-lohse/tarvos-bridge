@@ -245,9 +245,9 @@ function clientRegisterListener(data){
             }
 			this.removeListener('message', clientRegisterListener);//client is registered, we don't need this anymore
 		}).bind(this),
-		(function(){
+		(function(code){
 			console.log('Token %s has no battle associated to it', token);
-			console.log('Dropping client.');
+			console.log('Error code '+code+'. Dropping client.');
 			this.close();
 		}).bind(this));
 	}
