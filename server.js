@@ -4,9 +4,13 @@ var WebSocketServer = require('ws').Server,
 	server          = new WebSocketServer({port: 8080}),
     BattleIndex     = require('./BattleIndex.js'),
 	API             = require('./API.js'),
-    inactivity      = require('./conf.json').inactivity;
+    inactivity      = require('./conf.json').inactivity,
+    winston         = require('winston');
 
-console.log('Socket started');
+winston.add(winston.transports.File, { filename: 'log/info.log' });
+winston.remove(winston.transports.Console);
+
+winston.log('Info','Socket started');
 
 //sends data to a single client
 function sendJSON(client, data){
