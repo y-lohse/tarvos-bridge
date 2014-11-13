@@ -18,12 +18,12 @@ function apiCall(command){
 		{cwd: conf.path}, 
 		function(error, stdout, stderr){
 			if (error || stderr){
-				console.log('Error during api call: %s', (error || stderr));
-                console.log(command);
+				winston.error('Error during api call: %s', (error || stderr));
+                winston.error(command);
 				def.reject(error);
 			}
 			else{
-				console.log(command+' returned '+stdout);
+				winston.info(command+' returned '+stdout);
 				def.resolve(stdout.replace(/(\r)?\n$/, ''));
 			}
 	});

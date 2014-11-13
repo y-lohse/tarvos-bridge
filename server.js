@@ -10,20 +10,21 @@ var WebSocketServer = require('ws').Server,
 winston.add(winston.transports.File, { filename: 'log/info.log' });
 winston.remove(winston.transports.Console);
 
-winston.log('Info','Socket started');
+winston.info('Socket started');
+
 
 //sends data to a single client
 function sendJSON(client, data){
     if(client.socket != null) {
         try{
         	 client.socket.send(JSON.stringify(data), function(err){
-				if (err) console.log('error while sending data to client');
+				if (err) winston.error('error while sending data to client');
 			});
 		}
         catch(e){
-        	console.log(e);
-        	console.log(e.stack);
-        	console.log(data);
+            winston.error(e);
+            winston.error(e.stack);
+            winston.error(data);
         }
     }
 }
@@ -40,7 +41,7 @@ function battleBroadcast(battle, data){
 }
 
 function battleSetup(battle){
-	console.log('Performing battle setup');
+	console.info('Performing battle setup');
 
     battle.engine.on('battle:wait', function(){
         battleBroadcast(battle, {type: 'battle-wait'});
@@ -86,7 +87,7 @@ function clientTimeout(client,battle) {
     clearTimeout(client.idle);
     client.socket = null;
     battleBroadcast(battle,"player:disconnect");
-    console.log('Client timeout');
+    winston.warn('Client timeout');
 }
 
 function ping(client,battle) {
@@ -94,7 +95,7 @@ function ping(client,battle) {
         try {
             client.socket.ping();
         } catch (err) {
-            console.log("Warning : can't ping client - "+err);
+            winston.warn("Warning : can't ping client - "+err);
         }
         client.timeout = setTimeout(clientTimeout, inactivity.timeout, client, battle);
     }
@@ -103,7 +104,7 @@ function ping(client,battle) {
 function isInteger(data) {
     if (data && data !== null && data === parseInt(data)) return true;
     else {
-        console.log("Warning : data : "+data+" is not an integer");
+        winston.warn("Warning : data : "+data+" is not an integer");
 
         return false;
     }
@@ -115,7 +116,7 @@ function socketSetup(battle,client) {
         clearTimeout(client.idle);
         client.socket = null;
         battleBroadcast(battle,"player:disconnect");
-        console.log("Client closed the game");
+        winston.info("Client closed the game");
     });
 
     client.socket.on('message', function(data){
@@ -181,7 +182,7 @@ function socketSetup(battle,client) {
 }
 
 function clientSetup(battle, client){
-	console.log('Performing client setup');
+	winston.info('Performing client setup');
     client.idle = setTimeout(ping, inactivity.timeout, client, battle);
 
     socketSetup(battle, client);
@@ -199,7 +200,7 @@ function clientSetup(battle, client){
 			sendJSON(client, data);
 		});
 		
-		console.log('Client setup complete');
+		console.info('Client setup complete');
 		
 		sendJSON(client, {
 			type: 'identity',
@@ -221,19 +222,19 @@ function clientRegisterListener(data){
 	
 	if (data.type == 'register'){
 		var token = data.token;
-		console.log('Received token %s', token);
+		winston.info('Received token %s', token);
 		
 		BattleIndex.getBattleByToken(token)
 		.then(
 		(function(battle){
-			console.log('Battle '+battle.engine.id+' linked to token '+token);
-			console.log('%d clients already in that battle', battle.clients.length);
+			winston.info('Battle '+battle.engine.id+' linked to token '+token);
+			winston.info('%d clients already in that battle', battle.clients.length);
 
             var client = null;
             battle.clients.every(function(cl){
                 if (cl.token == token){
                     client = cl;
-                    console.log('Client returned');
+                    winston.info('Client returned');
                     return false;
                 }
                 else{
@@ -256,7 +257,7 @@ function clientRegisterListener(data){
             }
 			// En cas de nouvelle connexion :create client tracking object
             else {
-                console.log('New client');
+                winston.info('New client');
                 client = {
                     socket: this,
                     token: token,
@@ -271,19 +272,19 @@ function clientRegisterListener(data){
 			this.removeListener('message', clientRegisterListener);//client is registered, we don't need this anymore
 		}).bind(this),
 		(function(code){
-			console.log('Token %s has no battle associated to it', token);
-			console.log('Error code '+code+'. Dropping client.');
+			winston.warn('Token %s has no battle associated to it', token);
+			winston.error('Error code '+code+'. Dropping client.');
 			this.close();
 		}).bind(this));
 	}
 	else{
-		console.log('Client sent data prior to handshake');
-		console.log(data);
+		winston.info('Client sent data prior to handshake');
+		winston.info(data);
 	}
 }
 
 server.on('connection', function(ws){
-	console.log('New connection');
+	winston.info('New connection');
 	ws.on('message', clientRegisterListener);
 });
 

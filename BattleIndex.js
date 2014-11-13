@@ -10,13 +10,13 @@ var battles = [];
 
 //returns the battle for a token (creates it if necessary). Returns null if the token is nowhere to be found
 function getBattleByToken(token){
-	console.log('Searching battle for token %s', token);
+	window.info('Searching battle for token %s', token);
 	var def = Q.defer();
 	var tokenBattle = null;
 	
 	API.getBattleId(token)
 	.then(function(battleId){
-		console.log('Looking for battle id %s', battleId);
+		window.info('Looking for battle id %s', battleId);
 		//first check to see if the battle is already created
 		battles.every(function(battle){
 			if (battle.engine.id == battleId){
@@ -30,7 +30,7 @@ function getBattleByToken(token){
 		
 		//if it wasnt existing; create it
 		if (!def.promise.isFulfilled()){
-			console.log('Starting new engine instance for battle %s', battleId);
+			winston.info('Starting new engine instance for battle %s', battleId);
 			var engine = new TarvosEngine(battleId);
 			tokenBattle = {
 				engine: engine,
