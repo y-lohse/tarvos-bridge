@@ -36,7 +36,6 @@ function battleBroadcast(battle, data){
 }
 
 function battleSetup(battle){
-	//start liste,ers for battle events
 	console.log('Performing battle setup');
 
     battle.engine.on('battle:wait', function(){
@@ -117,6 +116,16 @@ function socketSetup(battle,client) {
 
     client.socket.on('message', function(data){
         if(!data || data === null) return;
+        /**
+         * @type {{targetType:string}}
+         * @type {{playerId:number}}
+         * @type {{roomId:number}}
+         * @type {{armamentId:number}}
+         * @type {{targetId:number}}
+         * @type {{crewId:number}}
+         * @type {{moduleId:number}}
+         * @type {{doorId:number}}
+         */
         data = JSON.parse(data);
 
         clearTimeout(client.idle);
@@ -125,7 +134,7 @@ function socketSetup(battle,client) {
         switch (data.type){
             case 'attack':
                 if (!client.player || !isInteger(data.playerId) || !isInteger(data.armamentId) || !isInteger(data.roomId) ) break;
-                var player;
+                var player = null;
                 battle.clients.every(function(client){
                 	if (client.player.id === data.playerId){
                 		player = client.player;
@@ -135,7 +144,6 @@ function socketSetup(battle,client) {
                 		return true;
                 	}
                 });
-                
                 var armament = client.player.getArmament(data.armamentId),
                 	module = player.getModuleById(data.roomId);
                 battle.engine.pushTask(battle.engine.attackPlayer, player, armament, module);
@@ -157,7 +165,8 @@ function socketSetup(battle,client) {
             case 'closedoor':
                 battle.engine.pushTask(battle.engine.manageDoor, data.doorId, false);
                 break;
-
+            default:
+                break;
         }
     });
 
@@ -204,7 +213,7 @@ function clientSetup(battle, client){
 
 //waits for a client to send a register message
 function clientRegisterListener(data){
-	var data = JSON.parse(data);
+	data = JSON.parse(data);
 	
 	if (data.type == 'register'){
 		var token = data.token;
@@ -244,7 +253,7 @@ function clientRegisterListener(data){
 			// En cas de nouvelle connexion :create client tracking object
             else {
                 console.log('New client');
-                var client = {
+                client = {
                     socket: this,
                     token: token,
                     player: null,

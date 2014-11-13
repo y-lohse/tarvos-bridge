@@ -48,7 +48,6 @@ function getBattleByToken(token){
 }
 
 function endBattle(battle){
-	//determine the victor
 	var winner = (battle.clients[0].player.hp.current > 0) ? battle.clients[0].token : battle.clients[1].token;
 	
 	//@TODO: pass a clean client object, not the whole array
