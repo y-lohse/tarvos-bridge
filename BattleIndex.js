@@ -10,13 +10,13 @@ var battles = [];
 
 //returns the battle for a token (creates it if necessary). Returns null if the token is nowhere to be found
 function getBattleByToken(token){
-	window.info('Searching battle for token %s', token);
+	winston.info('Searching battle for token %s', token);
 	var def = Q.defer();
 	var tokenBattle = null;
 	
 	API.getBattleId(token)
 	.then(function(battleId){
-		window.info('Looking for battle id %s', battleId);
+		winston.info('Looking for battle id %s', battleId);
 		//first check to see if the battle is already created
 		battles.every(function(battle){
 			if (battle.engine.id == battleId){
